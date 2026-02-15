@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ipms-pipeline"
+version = "0.1.0"
+description = "A reusable Python package for analyzing immunoprecipitation mass spectrometry (IP-MS) data."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+    { name = "Richard Cassidy" },
+]
+
+dependencies = [
+    "pandas>=1.5.0",
+    "numpy>=1.23.0",
+    "openpyxl>=3.0.0",
+    "matplotlib>=3.6.0",
+    "seaborn>=0.12.0",
+    "adjusttext>=1.0.0",
+    "scipy>=1.9.0",
+    "scikit-learn>=1.1.0",
+    "statsmodels>=0.14.0",
+    "pyyaml>=6.0",
+    "mygene>=3.2.0",
+]
+
+[project.optional-dependencies]
+venn = ["matplotlib-venn>=0.11.0"]
+dev = [
+    "pytest>=7.0",
+    "matplotlib-venn>=0.11.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["ipms*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
