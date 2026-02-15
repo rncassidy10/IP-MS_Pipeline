@@ -1,0 +1,110 @@
+# IP-MS Experiment Configuration
+# ================================
+# Edit this file for each new experiment
+
+experiment:
+  name: "AS3MT_IP-MS"
+  description: "AS3MT vs AS3MT-d2d3 interactome comparison"
+  date: "2026-02-05"
+  investigator: "Your Name"
+
+# Experimental conditions
+# IMPORTANT: These names must match EXACTLY what's in your column names
+conditions:
+  control: "EV"           # Empty vector control
+  treatments:             # List your treatment conditions
+    - "WT"                # AS3MT wild-type
+    - "d2d3"              # AS3MT-d2d3 isoform
+  # Note: "Process Blank" columns will be ignored (not in control or treatments)
+
+# Data column names (how they appear in your Excel file)
+data_columns:
+  protein_id: "Accession"              # Protein accession/ID column
+  gene_symbol: "Gene_Symbol"           # Gene name column (will be created if missing)
+  peptides: "# Peptides"               # Number of peptides column
+  intensity_prefix: "Abundances (Normalized):"
+  # The code will find columns containing BOTH the prefix AND the condition name
+  # Example matches:
+  #   - "Abundances (Normalized): F6: Sample, EV, Gel1" → matches "EV"
+  #   - "Abundances (Normalized): F11: Sample, WT, Gel1" → matches "WT"
+  #   - "Abundances (Normalized): F1: Sample, Process Blank, Gel1" → ignored (not in conditions)
+
+
+# File paths
+data_paths:
+  input_file: "/Users/richard.cassidy/ipms_pipeline/data/raw/PC00224_RichardC_Chimerys_Proteins.xlsx"
+  crapome_list: "/Users/richard.cassidy/ipms_pipeline/data/raw/crapome_matrix_reduced_freq.xlsx"  
+  output_dir: "/Users/richard.cassidy/ipms_pipeline/results"
+
+
+# Quality control parameters
+qc_parameters:
+  min_peptides: 2                  # Minimum peptides to keep a protein
+  min_valid_per_protein: 0.5       # Minimum fraction of valid values (50%)
+  min_valid_per_sample: 0.3        # Minimum valid values per sample (30%)
+
+
+# Manual contaminant removal (simple keyword matching)
+manual_contaminants:
+  - 'KRT'              # Keratins (skin contamination)
+  - 'Keratin'
+  - 'keratin'
+  - 'TRYP'             # Trypsin (from digestion)
+  - 'Trypsin'
+  - 'trypsin'
+  - 'ALB'              # Albumin (from serum)
+  - 'Albumin'
+  - 'albumin'
+  - 'IGG'              # Immunoglobulins (antibody)
+  - 'Immunoglobulin'
+  - 'immunoglobulin'
+  - 'BSA'              # From cell culture media (serum supplement)
+  - 'Fetal bovine'
+  # Add more as needed:
+  #  - 'HSP'              # Heat shock proteins (common contaminants)
+
+
+# CRAPome filtering (contaminant removal)
+crapome_filtering:
+  freq_threshold: 0.30              # Remove proteins appearing in >30% of controls (0.0-1.0)
+  spectral_count_threshold: 50      # Remove proteins with total spectral count > 50
+  # Adjust these based on stringency:
+  #   Conservative (less removal): freq > 0.50, SC > 100
+  #   Moderate (recommended):      freq > 0.30, SC > 50
+  #   Aggressive (more removal):   freq > 0.20, SC > 20
+
+
+# Normalization settings
+normalization:
+  method: "log2"                   # Options: log2, zscore, quantile, median
+  imputation: "mindet"             # Options: mindet, zero, median, knn
+  bait_normalize: false            # Set to true if normalizing to bait
+  bait_protein: null               # e.g., "AS3MT" if using bait normalization
+
+# Statistical analysis
+statistics:
+  alpha: 0.05                      # Significance threshold
+  log2fc_threshold: 1.0            # Fold change threshold (log2 scale)
+  correction: "fdr_bh"             # Options: fdr_bh, bonferroni, none
+  
+# Comparisons to perform
+# Format: [treatment, control, comparison_name]
+comparisons:
+  - ["WT", "EV", "WT_vs_EV"]
+  - ["d2d3", "EV", "d2d3_vs_EV"]
+  # Optional: add direct comparison
+  # - ["WT", "d2d3", "WT_vs_d2d3"]
+
+# Visualization options
+visualization:
+  volcano_plot: true
+  venn_diagram: true
+  heatmap: true
+  boxplots: true
+  top_n_proteins: 20               # Number of top proteins to highlight
+
+# Report settings
+report:
+  format: "txt"                    # Options: txt, html, both
+  include_tables: true
+  include_plots: true
