@@ -5,8 +5,8 @@
 experiment:
   name: "AS3MT_IP-MS"
   description: "AS3MT vs AS3MT-d2d3 interactome comparison"
-  date: "2026-02-05"
-  investigator: "Your Name"
+  date: "2026-02-24"
+  investigator: "RNPC"
 
 # Experimental conditions
 # IMPORTANT: These names must match EXACTLY what's in your column names
